@@ -1,0 +1,137 @@
+﻿@using ConsignaWeb.MVC.Models.Repository;
+@using ConsignaWeb.MVC.Models.Bussines;
+@{
+    ProductsAllocated product = ViewBag.product;
+    Layout = "";
+
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TotalPaid').change(function () {
+            var totalPaid = parseInt($('#TotalPaid').val());
+            var quantityReturned = parseInt($('#QuantityReturned').val());
+            var max = parseInt(@(product.Amount));
+            var price = parseFloat(@(product.Price.ToString().Replace(",", ".")));
+
+            if (parseInt(quantityReturned) + parseInt(totalPaid) > max)
+                $('#QuantityReturned').val(max - totalPaid);
+            $('#Total').val(parseFloat((parseInt($('#TotalPaid').val()) * price - (parseInt($('#TotalPaid').val()) * price / 100 * parseFloat(@(product.Commision.ToString().Replace(",","."))))+0.004).toFixed(2)));
+            $('#Allocated').html(max - ((parseInt($('#TotalPaid').val())) + (parseInt($('#QuantityReturned').val()))));
+
+        });
+        $('#QuantityReturned').change(function () {
+            var totalPaid = parseInt($('#TotalPaid').val());
+            var quantityReturned = parseInt($('#QuantityReturned').val());
+            var max = parseInt(@(product.Amount));
+            var price = parseFloat(@(product.Price.ToString().Replace(",", ".")));
+
+            if (parseInt(quantityReturned) + parseInt(totalPaid) > max)
+                $('#TotalPaid').val(max - quantityReturned);
+            $('#Total').val(parseFloat((parseInt($('#TotalPaid').val()) * price - (parseInt($('#TotalPaid').val()) * price / 100 * parseFloat(@(product.Commision.ToString().Replace(",","."))))+0.004).toFixed(2)));
+            $('#Allocated').html(max - ((parseInt($('#TotalPaid').val())) + (parseInt($('#QuantityReturned').val()))));
+
+        });
+    });
+
+    $(function () {
+        // run the currently selected effect
+        function runCountAllocattedProductEffect() {
+            // get effect type from
+            var selectedEffect = $("Slide");
+
+            // most effect types need no options passed by default
+            var options = {};
+            // some effects have required parameters
+            if (selectedEffect === "scale") {
+                options = { percent: 100 };
+            } else if (selectedEffect === "size") {
+                options = { to: { width: 280, height: 185 } };
+            }
+
+            // run the effect
+            window.location.hash = '#CountAllocattedProductEffect';
+            $("#CountAllocattedProductEffect").show(selectedEffect, options, 500);
+        };
+
+        //callback function to bring a hidden box back
+        function callbackCountAllocattedProduct() {
+            setTimeout(function () {
+                $("#CountAllocattedProductEffect:visible").removeAttr("style").fadeOut();
+            }, 1000);
+        };
+
+        // run effect
+        $(document).ready(function () {
+            runCountAllocattedProductEffect();
+            $("#PendingVendorsOnDayEffect").hide();
+            $("#AccountabilityEffect").hide();
+
+            return false;
+        });
+
+        $("#CountAllocattedProductEffect").hide();
+    });
+</script>
+
+
+<div class="panel panel-default" id="CountAllocattedProductEffect">
+    <div class="panel-heading">Produto Selecionado</div>
+    <div class="panel-body">
+        @using (Html.BeginForm("VendorAccountability", "Vendor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input type="hidden" value="@product.Id" name="AllocatedId" />
+            <input type="hidden" value="@product.Vendor.Id" name="VendorId" />
+            <div class="col-md-8">
+                <table class="table table-striped table-hover ">
+                    <tr><td>Produto</td><td>@product.Product.Name</td></tr>
+                    <tr><td>Vendedor</td><td>@product.Vendor.Name @product.Vendor.SurName</td></tr>
+                    <tr><td>Preço:</td><td>@product.Price.ToString("C")</td></tr>
+                    <tr><td>Valor Devido</td><td>@(MoneyConversor.RoundUp((MoneyConversor.RemoveComission(product.Price * product.Amount, product.Commision))).ToString("C"))</td></tr>
+                    <tr><td>Total Alocado:</td><td>@product.Amount</td></tr>
+                    <tr>
+                        <td>Devolvido</td>
+                        <td>
+                            <select class="form-control" id="QuantityReturned" name="QuantityReturned">
+                                @for (int i = 0; i <= product.Amount; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Vendidos:</td>
+                        <td>
+                            <select class="form-control" id="TotalPaid" name="TotalPaid">
+                                @for (int i = 0; i <= product.Amount; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr><td>Restante Alocado</td><td id="Allocated">@product.Amount</td></tr>
+                    <tr>
+                        <td>Total a Pagar</td>
+                        <td>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    R$
+                                </span>
+                                <input type="text" id="Total" class="form-control" disabled value="0,00" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <center><img class="img-thumbnail" src="@product.Product.Image" /></center>
+            </div>
+            <div class="col-sm-12">
+                <input type="submit" value="Prestar Conta" class="btn btn-success" style="float:right;" />
+            </div>
+        }
+    </div>
+</div>

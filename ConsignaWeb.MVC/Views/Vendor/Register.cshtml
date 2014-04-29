@@ -1,0 +1,27 @@
+﻿@{
+}
+
+<div class="col-md-12">
+    <div class="col-md-6">
+        <div class="well">
+
+            @using (Html.BeginForm("Register", "Vendor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <fieldset>
+                    <legend>Cadastro de Vendedor</legend>
+                    <label>Nome</label><input type="text" name="Name" id="nome" class="form-control" value="@ViewBag.Name" /><label class="text-danger"> @ViewBag.NameError</label><br />
+                    <label>Sobrenome</label><input type="text" name="SurName" id="nome" class="form-control" value="@ViewBag.SurName" /><label class="text-danger"> @ViewBag.SurNameError</label><br />
+                    <label>Email</label><input type="email" name="Email" id="email" class="form-control" value="@ViewBag.Email" /><label class="text-danger"> @ViewBag.EmailError</label><br />
+                    <label>Senha</label><input type="password" name="Password1" id="password1" class="form-control" /><label class="text-danger">@ViewBag.PasswordError</label><br />
+                    <label>Confirmação de Senha</label><input type="Password" name="Password2" id="password2" class="form-control" /><br />
+                    <label>CPF</label><input type="text" name="CPFCNPJ" id="CPF" class="form-control" value="@ViewBag.CPFCNPJ" /><label class="text-danger">@ViewBag.CPFCNPJError</label><br />
+                    <br /><label class="text-success"> @ViewBag.SaveSuccess</label><br />
+                    <button class="btn btn-sm btn-primary" style="float:right;" type="submit">Confirmar</button>
+                </fieldset>
+            }
+        </div>
+    </div>
+    @*<div class="col-md-6">
+        @Html.Action("ShowVendors", "Vendor")
+    </div>*@
+</div>

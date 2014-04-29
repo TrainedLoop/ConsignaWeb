@@ -1,0 +1,80 @@
+﻿@using ConsignaWeb.MVC.Models.Repository;
+@{
+    Layout = "";
+    Products product = ViewBag.Product;
+}
+<script>
+    $(function () {
+        // run the currently selected effect
+        function runEditProductBoxEffect() {
+            // get effect type from
+            var selectedEffect = $("Slide");
+
+            // most effect types need no options passed by default
+            var options = {};
+            // some effects have required parameters
+            if (selectedEffect === "scale") {
+                options = { percent: 100 };
+            } else if (selectedEffect === "size") {
+                options = { to: { width: 280, height: 185 } };
+            }
+
+            // run the effect
+            window.location.hash = '#EditProductBoxEffect';
+            $("#EditProductBoxEffect").show(selectedEffect, options, 500);
+        };
+
+        //callback function to bring a hidden box back
+        function callbackAccountability() {
+            setTimeout(function () {
+                $("#EditProductBoxEffect:visible").removeAttr("style").fadeOut();
+            }, 1000);
+        };
+
+        // run effect
+        $(document).ready(function () {
+            runEditProductBoxEffect();
+            return false;
+        });
+
+        $("#EditProductBoxEffect").hide();
+    });
+</script>
+
+
+    <br /><br />
+
+<div class="panel panel-default" id="EditProductBoxEffect">
+    <div class="panel-heading">Produto <strong>@product.Name</strong></div>
+    <div class="panel-body">
+        @using (Html.BeginForm("ProductEdit", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input type="hidden" value="@product.Id" name="Id" />
+            <label>Nome</label><input type="text" name="Name" id="Name" class="form-control" value="@product.Name" />
+            <label>Preço</label>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    R$
+                </span>
+                <input type="number" min="0" step="0.01" name="Price" id="Price" class="form-control" value="@product.Price.ToString("N2").Replace(",", ".")" /><br />
+            </div>
+            <label>Custo</label>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    R$
+                </span>
+                <input type="number" min="0" step="0.01" name="Cost" id="Cost" class="form-control" value="@product.Cost.ToString("N2").Replace(",", ".")" /><br />
+            </div>
+            <label>Quantidade</label><input type="number" min="0" step="1" name="Amount" id="Amount" class="form-control" value="@product.Amount" /><br />
+            <label>Imagem</label>
+            <div>
+                <center><img class="img-thumbnail" src="@product.Image" width="150" height="150" /></center>
+
+                <br />
+                <input type="file" class="col-md-12 btn btn-default" name="imagefile" title="teste" id="imagefile"><br /><label class="text-danger"> @ViewBag.ImageError</label>
+                <p class="text-muted">Imagens com mais de 300x300 pixels serão redimensionadas.</p>
+            </div>
+            <br /><button class="btn btn-sm btn-primary" style="float:right;" type="submit">Alterar</button>
+        }
+    </div>
+</div>

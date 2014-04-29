@@ -1,0 +1,294 @@
+﻿@using ConsignaWeb.MVC.Models.Repository;
+@using ConsignaWeb.MVC.Models.ChargesExtensions;
+
+@{
+    List<Charges> Charges = ViewBag.Charges;
+    List<Products> Products = ViewBag.Products;
+    List<Users> Vendor = ViewBag.Vendor;
+    int typeValue = 0;
+}
+
+@section scripts
+{
+    <style>
+        #product-icon-option {
+            float: left;
+            height: 50px;
+            width: 50px;
+        }
+    </style>
+
+    <script>
+
+        $(function () {
+            $("#datepicker1").datepicker({
+                dateFormat: 'dd/mm/yy',
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Próximo',
+                prevText: 'Anterior'
+            });
+        });
+        $(function () {
+            $("#datepicker2").datepicker({
+                dateFormat: 'dd/mm/yy',
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Próximo',
+                prevText: 'Anterior'
+            });
+        });
+
+        $(function () {
+            var products = [
+                @foreach (var item in Products)
+	{
+		 <text>{
+                    value: "@item.Id",
+
+                    label: "@item.Name",
+                    price: "   " + "@item.Price.ToString("0.00")",
+                    cost: "@item.Cost.ToString("0.00")",
+                    icon: "@item.Image",
+                    amount: "@item.Amount"
+                },</text>
+	}
+
+            ];
+
+
+            $("#product").autocomplete({
+                minLength: 0,
+                source: products,
+                focus: function (event, ui) {
+                    $("#product").val(ui.item.label);
+                    return false;
+                },
+                select: function (event, ui) {
+                    $("#product").val(ui.item.label).attr("style", "border-color: green;");;
+                    $("#productid").val(ui.item.value);
+                    $("#product-price").html("R$" + ui.item.price);
+                    $("#product-cost").html("R$" + ui.item.cost);
+                    $("#product-amount").html(ui.item.amount);
+                    $("#product-max").attr("max", ui.item.amount);
+                    $("#product-label").attr("style", "Color: green")
+                    $("#product-icon").attr("src", ui.item.icon);
+
+                    return false;
+                }
+
+            })
+
+                .data("ui-autocomplete")._renderItem = function (ul, item) {
+                    return $("<li>")
+                      .append("<img src='" + item.icon + "' id='product-icon-option' />" + "<a><strong>" + item.label + "</strong><br /> R$" + item.price + ", Estoque: " + item.amount + "  </a><br />")
+                      .appendTo(ul);
+                };
+
+
+
+        });
+
+
+
+        
+        $(document).ready(function () {
+            $('#product').click(function () {
+                $('#product').autocomplete("search", "");
+            });
+            return false;
+        });
+    </script>
+<script>
+
+    $(function () {
+        var vendors = [
+            @foreach (var item in Vendor)
+{
+     <text>{
+                value: "@item.Id",
+                label: "@item.Name " + "@item.SurName",
+                cpf: "@item.CPF",
+            },</text>
+}
+
+        ];
+
+        $("#vendor").autocomplete({
+            minLength: 0,
+            source: vendors,
+            focus: function (event, ui) {
+                $("#vendor").val(ui.item.label);
+                return false;
+            },
+            select: function (event, ui) {
+                $("#vendor").val(ui.item.label).attr("style", "border-color: green;");
+                $("#vendorid").val(ui.item.value);
+                $("#vendor-cpf").val(ui.item.cpf);
+                $("#vendor-commision").val(ui.item.commision);
+                $("#vendor-label").attr("style", "Color: green")
+                return false;
+            }
+        })
+        .data("ui-autocomplete")._renderItem = function (ul, item) {
+            return $("<li>")
+              .append("<a>" + item.label + "</a>")
+              .appendTo(ul)
+
+        };
+    });
+    $(document).ready(function () {
+        $('#vendor').click(function () {
+            $('#vendor').autocomplete("search", "");
+        });
+        return false;
+    });
+</script>
+
+    @Scripts.Render("~/scripts/tables")
+    @Styles.Render("~/stylesheets/tables")
+    <script>
+        $(document).ready(function () {
+            $('#tablecharges').dataTable(
+                {
+                    "oLanguage": {
+                        "sProcessing": "Aguarde enquanto os dados são carregados ...",
+                        "sLengthMenu": "Mostrar _MENU_ registros por pagina",
+                        "sZeroRecords": "Nenhum registro correspondente ao criterio encontrado",
+                        "sInfoEmtpy": "Exibindo 0 a 0 de 0 registros",
+                        "sInfo": "Exibindo de _START_ a _END_ de _TOTAL_ registros",
+                        "sInfoFiltered": "",
+                        "sSearch": "Procurar",
+                        "oPaginate": {
+                            "sFirst": "Primeiro",
+                            "sPrevious": "Anterior",
+                            "sNext": "Próximo",
+                            "sLast": "Último"
+                        }
+                    }
+                });
+        });
+
+    </script>
+
+}
+
+<div class="col-md-12">
+    @using (Html.BeginForm("Chargers", "Charger", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="col-md-12 well">
+            <label>Filtros</label>
+            <input type="hidden" name="vendorid" id="vendorid">
+            <input type="hidden" name="productid" id="productid">
+            <div class="col-md-12">
+                <label id="vendor-label">Vendedor</label>
+            </div>
+            <div class="col-md-12">
+                <input id="vendor" class="form-control"><label class="text-danger"> @ViewBag.vendorError</label>
+            </div>
+            <div class="col-md-12">
+                <label id="product-label">Produto</label>
+            </div>
+            <div class="col-md-12">
+                <input id="product" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label>Valor Minimo</label>
+                <input name="min" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label>Valor Maximo</label>
+                <input name="max" class="form-control">
+
+            </div>
+            <div class="col-md-2">
+                <label id="type-label">Tipo</label>
+                <select name="type" class="form-control">
+                    <option value="null">Todos</option>
+                    @foreach (var item in Enum.GetNames(typeof(ChargesTypes)))
+                    {
+                        <option value="@typeValue">@item.Replace("_", " ")</option>
+                        typeValue++;
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label>Data Inicial</label>
+                <input type="text" id="datepicker1" name="inicialDate" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label>Data Final</label>
+                <input type="text" id="datepicker2" name="finalDate" class="form-control">
+            </div>
+            <div class="col-md-12">
+                <br />
+                <input type="submit" value="Carregar" class="btn btn-primary" style="float:right" />
+            </div>
+        </div>
+
+    }
+
+
+    <div class="col-md-12 well">
+
+        <table class="table table-striped table-bordered table-hover well" id="tablecharges">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Tipo</th>
+                    <th>Vendedor</th>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Charges)
+                {
+
+                    if (item.Type == ChargesTypes.Compra)
+                    {
+                        <tr class="danger">
+                            <td>@item.Data</td>
+                            <td>@item.Type.ToString().Replace("_", " ")</td>
+                            <td></td>
+                            <td>@item.Products.Name</td>
+                            <td>@item.Amount</td>
+                            <td>@item.Value.ToString("C")</td>
+                        </tr>
+                    }
+                    if (item.Type == ChargesTypes.Venda)
+                    {
+                        <tr class="success">
+                            <td>@item.Data</td>
+                            <td>@item.Type.ToString().Replace("_", " ")</td>
+                            <td>@item.Vendor.Name</td>
+                            <td>@item.Products.Name</td>
+                            <td>@item.Amount</td>
+                            <td>@item.Value.ToString("C")</td>
+                        </tr>
+                    }
+                    if (item.Type == ChargesTypes.Retirada_do_Estoque)
+                    {
+                        <tr class="success">
+                            <td>@item.Data</td>
+                            <td>@item.Type.ToString().Replace("_", " ")</td>
+                            <td></td>
+                            <td>@item.Products.Name</td>
+                            <td>@item.Amount</td>
+                            <td>@item.Value.ToString("C")</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

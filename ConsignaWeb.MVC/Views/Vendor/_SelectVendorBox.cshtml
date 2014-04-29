@@ -1,0 +1,59 @@
+﻿@model List<ConsignaWeb.MVC.Models.Repository.Users>
+
+    <script>
+
+        $(function () {
+            var vendors = [
+                @foreach (var item in Model)
+{
+     <text>{
+                    value: "@item.Id",
+                    label: "@item.Name " + "@item.SurName",
+                    cpf: "@item.CPF",
+                },</text>
+}
+
+            ];
+
+            $("#vendor").autocomplete({
+                minLength: 0,
+                source: vendors,
+                focus: function (event, ui) {
+                    $("#vendor").val(ui.item.label);
+                    return false;
+                },
+                select: function (event, ui) {
+                    $("#vendor").val(ui.item.label).attr("style", "border-color: green;");
+                    $("#vendorid").val(ui.item.value);
+                    $("#vendor-cpf").val(ui.item.cpf);
+                    $("#vendor-commision").val(ui.item.commision);
+                    $("#vendor-label").attr("style", "Color: green")
+                    return false;
+                }
+            })
+            .data("ui-autocomplete")._renderItem = function (ul, item) {
+                return $("<li>")
+                  .append("<a>" + item.label + "</a>")
+                  .appendTo(ul)
+
+            };
+        });
+        $(document).ready(function () {
+            $('#vendor').click(function () {
+                $('#vendor').autocomplete("search", "");
+            });
+            return false;
+        });
+    </script>
+
+<div class="col-md-12">
+    <label id="vendor-label">Selecione o Vendedor</label>
+</div>
+<div class="col-md-8">
+    <input id="vendor" class="col-md-2 form-control" value="">
+</div>
+<div class="col-md-4">
+    <input type="submit" value="Selecionar" class="btn btn-default" style="float:right" /><label class="text-success"> @ViewBag.SaveSuccess</label>
+</div>
+<input type="hidden" id="vendorid" name="vendorid" value="">
+

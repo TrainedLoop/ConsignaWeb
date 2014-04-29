@@ -1,0 +1,46 @@
+﻿body {
+    background-image: radial-gradient(ellipse farthest-corner at center, #575151 0%, #000000 200%);
+}
+
+.form-control {
+    /*background-color: #ACACAC !important;*/
+    border: 1px solid #928A8A;
+    -webkit-box-shadow: inset 1px 1px 10px 1px #525252;
+    box-shadow: inset 1px 1px 10px 1px #525252;
+}
+
+select, input {
+    color: black;
+}
+
+.paginate_disabled_previous, .paginate_disabled_next {
+    color: #818080 !important;
+}
+
+.paginate_disabled_previous, .paginate_enabled_previous, .paginate_disabled_next, .paginate_enabled_next {
+    color: #F5F5F5 !important;
+}
+
+table thead tr th, table tbody tr td {
+    text-align: center;
+}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    background-color: #FFFFFF;
+    opacity: 1;
+}
+
+
+
+
+
+
+
+/*Menu Nome */
+/*.navbar-default .navbar-brand {
+    color: #003CA3;
+}*/
+/*Menu Itens */
+/*.navbar-default .navbar-nav > li > a {
+    color: #003ca3;
+}*/

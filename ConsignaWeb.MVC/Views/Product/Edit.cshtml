@@ -1,0 +1,123 @@
+﻿@using ConsignaWeb.MVC.Models.Repository;
+@{
+    List<Products> products = ViewBag.Products;
+    Products SelectedProduct = ViewBag.SelectedProduct;
+    bool? teste = ViewBag.Error;
+}
+@section scripts
+{
+    <style>
+        #project-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 1em;
+        }
+
+
+
+        #product-icon-option {
+            float: left;
+            height: 50px;
+            width: 50px;
+        }
+    </style>
+    <script>
+        $(function () {
+            var products = [
+                @foreach (var item in products)
+	{
+		 <text>{
+                    value: "@item.Id",
+
+                    label: "@item.Name",
+                    price: "@item.Price.ToString("0.00")",
+                    cost: "@item.Cost.ToString("0.00")",
+                    icon: "@item.Image",
+                    amount: "@item.Amount"
+                },</text>
+	}
+
+            ];
+
+
+            $("#product").autocomplete({
+                minLength: 0,
+                source: products,
+                focus: function (event, ui) {
+                    $("#product").val(ui.item.label);
+                    return false;
+                },
+                select: function (event, ui) {
+                    $("#product").val(ui.item.label).attr("style", "border-color: green;");
+                    $("#productid").val(ui.item.value);
+                    $("#product-price").html("R$" + ui.item.price);
+                    $("#product-cost").html("R$" + ui.item.cost);
+                    $("#product-amount").html(ui.item.amount);
+                    $("#product-max").attr("max", ui.item.amount);
+                    $("#product-label").attr("style", "Color: green")
+                    $("#product-icon").attr("src", ui.item.icon);
+
+                    return false;
+                }
+
+            })
+
+                .data("ui-autocomplete")._renderItem = function (ul, item) {
+                    return $("<li>")
+                      .append("<img src='" + item.icon + "' id='product-icon-option' />" + "<a><strong>" + item.label + "</strong><br /> R$" + item.price + ", Estoque: " + item.amount + "  </a><br />")
+                      .appendTo(ul);
+                };
+
+
+
+        });
+        $(document).ready(function () {
+            $('#product').click(function () {
+                $('#product').autocomplete("search", "");
+            });
+            return false;
+        });
+    </script>
+}
+
+<div class="col-md-12">
+    <div class="col-md-8 well">
+        @using (Html.BeginForm("Edit", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="col-md-12">
+                <label id="product-label">Selecione o Produto</label>
+            </div>
+            <div class="col-md-8">
+                <input id="product" class="form-control" value="">
+            </div>
+            <div class="col-md-4">
+                <input type="submit" value="Selecionar" class="btn btn-primary" style="float:right" /><label class="text-success"> @ViewBag.SaveSuccess</label>
+                <input type="hidden" id="productid" name="id">
+            </div>
+        }
+
+        @{
+            if (ViewBag.Error == true)
+            {
+                <p class="text-primary">
+
+                    <label>@ViewBag.AmountError</label>
+                    <label>@ViewBag.CostError</label>
+                    <label>@ViewBag.PriceError</label>
+                    <label>@ViewBag.NameError</label>
+                    <label>@ViewBag.ImageError</label>
+                </p>
+            }
+        }
+        @if (SelectedProduct != null)
+        {
+            <div class="col-md-12">
+                @Html.Action("EditBox", "Product", new { ProductId = SelectedProduct.Id })
+            </div>
+        }
+    </div>
+
+    @*<div class="col-md-6">
+                @Html.Action("ShowProducts", "Product")
+        </div>*@
+</div>

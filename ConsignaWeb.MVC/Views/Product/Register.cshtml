@@ -1,0 +1,29 @@
+﻿@{
+}
+
+<div class="col-md-12">
+    <div class="col-md-6">
+        <div class="well">
+            @using (Html.BeginForm("Register", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+
+                <fieldset>
+                    <legend>Registro de Produtos</legend>
+                    <label>Nome</label><input type="text" name="Name" id="nome" class="form-control" value="@ViewBag.Name" /><label class="text-danger"> @ViewBag.NameError</label>
+                    <label>Preço</label><input type="number" name="Price" id="Price" step="0.01" class="form-control" value="@ViewBag.Price" /><label class="text-danger"> @ViewBag.PriceError</label><br />
+                    <label>Custo</label><input type="number" name="Cost" id="Cost" min="0" step="0.01" class="form-control" value="@ViewBag.Cost" /><label class="text-danger"> @ViewBag.CostError</label><br />
+                    <label>Quantidade</label><input type="number" name="Amount" id="Amount" min="0" class="form-control" value="@ViewBag.Amount" /><label class="text-danger"> @ViewBag.AmountError</label><br />
+                    <label>Imagem</label><input type="file" class="col-md-12 btn btn-default" name="imagefile" title="teste" id="imagefile"><br /><label class="text-danger"> @ViewBag.ImageError</label>
+                    <p class="text-muted">Imagens com mais de 300x300 pixels serão redimensionadas.</p><br />
+                    <button class="btn btn-sm btn-primary" style="float:right;" type="submit">Confirmar</button>
+                    <br /><label class="text-success"> @ViewBag.SaveSuccess</label><br />
+                </fieldset>
+            }
+
+        </div>
+    </div>
+    @*<div class="col-md-6">
+        @Html.Action("ShowProducts", "Product")
+    </div>*@
+</div>
+

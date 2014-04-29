@@ -1,0 +1,15 @@
+﻿@{
+    Layout = "";
+}<h2>
+    CreateSchemaUpdate
+</h2>
+<div>
+    @if (!string.IsNullOrEmpty(ViewBag.ScriptUpdate))
+    {
+        <div>@Html.Raw(ViewBag.ScriptUpdate)</div>
+    }
+    else
+    {
+        <span>Nada a ser Atualizado.</span>
+    }
+</div>

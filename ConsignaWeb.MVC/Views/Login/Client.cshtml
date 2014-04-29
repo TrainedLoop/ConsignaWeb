@@ -1,0 +1,17 @@
+﻿@{
+}
+
+<div class="col-md-3">
+    <div class="well">
+
+        @using (Html.BeginForm("UserLogin", "Login", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <fieldset>
+                <legend>Login</legend>
+                <label>Email</label><input type="email" name="Email" id="Email" class="form-control" value="@ViewBag.Email" />
+                <label>Senha</label><input type="password" name="Password" id="Password" class="form-control" /> <label class="text-danger"> @ViewBag.LoginError</label><br />
+                <button class="btn btn-sm btn-primary" style="float:right;" type="submit">Confirmar</button>
+            </fieldset>
+        }
+    </div>
+</div>

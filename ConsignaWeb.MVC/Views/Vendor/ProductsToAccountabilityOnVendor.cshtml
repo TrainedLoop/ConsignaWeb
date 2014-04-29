@@ -1,0 +1,94 @@
+﻿@using ConsignaWeb.MVC.Models.Repository;
+@{
+    Layout = "";
+    List<ProductsAllocated> products = new List<ProductsAllocated>();
+    products.AddRange(ViewBag.products);
+
+}
+
+<script>
+    $(function () {
+        // run the currently selected effect
+        function runPendingVendorsOnDayEffect() {
+            // get effect type from
+            var selectedEffect = $("Slide");
+
+            // most effect types need no options passed by default
+            var options = {};
+            // some effects have required parameters
+            if (selectedEffect === "scale") {
+                options = { percent: 100 };
+            } else if (selectedEffect === "size") {
+                options = { to: { width: 280, height: 185 } };
+            }
+
+            // run the effect
+            window.location.hash = '#PendingVendorsOnDayEffect';
+            $("#PendingVendorsOnDayEffect").show(selectedEffect, options, 500);
+        };
+
+        //callback function to bring a hidden box back
+        function callbackPendingVendorsOnDay() {
+            setTimeout(function () {
+                $("#PendingVendorsOnDayEffect:visible").removeAttr("style").fadeOut();
+            }, 1000);
+        };
+
+        // run effect
+        $(document).ready(function () {
+            runPendingVendorsOnDayEffect();
+            $("#AccountabilityEffect").hide();
+            return false;
+        });
+
+        $("#PendingVendorsOnDayEffect").hide();
+    });
+</script>
+
+@if(products.Count > 0)
+{
+<div class="panel panel-default" id="PendingVendorsOnDayEffect">
+    <div class="panel-heading"> Produtos Pendentes No Vendedor: @products.FirstOrDefault().Vendor.Name @products.FirstOrDefault().Vendor.SurName</div>
+    <div class="panel-body">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Produtos</th>
+                    <th>Preço</th>
+                    <th>Quantidade</th>
+                    <th>Comissão</th>
+                    <th>Data</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in products)
+                {
+                    <tr>
+                        <td>@item.Product.Name</td>
+                        <td>@item.Price.ToString("C")</td>
+                        <td>@item.Amount</td>
+                        <td>% @item.Commision.ToString("0.00")</td>
+                        <td>@item.DateAccountability.ToShortDateString()</td>
+                        @using (Html.BeginForm("AccountabilityPerVendor", "Vendor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            <td align="center">
+                                <input type="hidden" name="vendorId" value="@item.Vendor.Id" />
+                                <input type="hidden" name="date" value="@item.DateAccountability" />
+                                <input type="hidden" name="countProductId" value="@item.Id" />
+                                <input type="submit" class="btn btn-sm btn-primary" value="Carregar">
+                            </td>
+
+                        }
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>
+}
+
+
+
+

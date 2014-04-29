@@ -1,0 +1,68 @@
+﻿@using ConsignaWeb.MVC.Models.Repository;
+@{
+    Layout = "";
+    Users vendor = ViewBag.Vendor;
+}
+
+
+<script>
+    $(function () {
+        // run the currently selected effect
+        function runEditVendorBoxEffect() {
+            // get effect type from
+            var selectedEffect = $("Slide");
+
+            // most effect types need no options passed by default
+            var options = {};
+            // some effects have required parameters
+            if (selectedEffect === "scale") {
+                options = { percent: 100 };
+            } else if (selectedEffect === "size") {
+                options = { to: { width: 280, height: 185 } };
+            }
+
+            // run the effect
+            window.location.hash = '#EditVendorBoxEffect';
+            $("#EditVendorBoxEffect").show(selectedEffect, options, 500);
+        };
+
+        //callback function to bring a hidden box back
+        function callbackAccountability() {
+            setTimeout(function () {
+                $("#EditVendorBoxEffect:visible").removeAttr("style").fadeOut();
+            }, 1000);
+        };
+
+        // run effect
+        $(document).ready(function () {
+            runEditVendorBoxEffect();
+            return false;
+        });
+
+        $("#EditVendorBoxEffect").hide();
+    });
+
+</script>
+
+
+<br /><br />
+<div class="panel panel-default" id="EditVendorBoxEffect">
+
+    <div class="panel-heading"> Dados do vendedor: <strong>@vendor.Name @vendor.SurName</strong></div>
+    <div class="panel-body">
+        @using (Html.BeginForm("EditVendor", "Vendor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+
+            <input type="hidden" value="@vendor.Id" name="Id" />
+            <label>Email</label> <input type="email" name="Email" id="email" class="form-control" value="@vendor.Email" />
+            <label>Senha</label> <input type="password" name="Password1" id="password1" class="form-control" />
+            <label>Confirmação de Senha</label><input type="Password" name="Password2" id="password2" class="form-control" />
+            <button class="btn btn-sm btn-primary" style="float: right; margin-top: 16px;" type="submit">Alterar</button>
+        }
+        @using (Html.BeginForm("DeleteVendor", "Vendor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input type="hidden" value="@vendor.Id" name="vendorId" />
+            <button class="btn btn-sm btn-danger" style="float:left;" type="submit">Deletar</button>
+        }
+    </div>
+</div>

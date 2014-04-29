@@ -1,0 +1,29 @@
+﻿@using ConsignaWeb.MVC.Models.Repository
+@{
+    List<Users> vendors = ViewBag.vendors;
+}
+
+<div class="col-md-12">
+    <div class="col-md-6 well">
+
+        @using (Html.BeginForm("EditAllocatedProducts", "Vendor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            Html.RenderPartial("_SelectVendorBox", vendors);
+        }
+        <br />
+
+
+        <div class="col-md-12">
+            <label class="text-danger"> @ViewBag.AmountError</label>
+            <label class="text-danger">@ViewBag.InventoryError</label>
+            <label class="text-danger">@ViewBag.DataError</label>
+            @Html.Action("AllocatedProductsBox", "Vendor", new { vendorId = ViewBag.vendorId, Save = ViewBag.SaveSuccess })
+        </div>
+    </div>
+    @*<div class="col-md-6">
+            @Html.Action("ShowVendors", "Vendor")
+        </div>*@
+</div>
+
+
+

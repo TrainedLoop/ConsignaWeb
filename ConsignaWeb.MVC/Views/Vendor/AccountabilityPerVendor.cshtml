@@ -1,0 +1,70 @@
+﻿@using ConsignaWeb.MVC.Models.Repository;
+@{
+    List<Users> vendors = ViewBag.Vendors;
+    Users SelectedVendor = ViewBag.SelectedVendor;
+    ProductsAllocated Product = ViewBag.Product;
+    if (ViewBag.error == null)
+    {
+        ViewBag.error = false;
+    }
+
+
+}
+
+
+<div class="col-md-12">
+    <div class="col-md-8 well">
+
+        @using (Html.BeginForm("AccountabilityPerVendor", "Vendor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            Html.RenderPartial("_SelectVendorBox",vendors);
+            
+            if (!string.IsNullOrEmpty(ViewBag.Save))
+            {
+                <div class="col-md-12">
+                    <br />
+                </div>
+                <div class="col-md-4">
+                    <div class="alert alert-dismissable alert-success">
+                        @ViewBag.Save
+                    </div>
+                </div>
+            }
+        }
+
+        @{
+            if (ViewBag.Error == true)
+            {
+                <p class="text-danger">
+
+                    <label>@ViewBag.PasswordError </label>
+                    <label>@ViewBag.EmailError</label>
+                    <label>@ViewBag.CommissionError</label>
+                    <label>@ViewBag.ProductAlocatedError</label>
+
+                </p>
+            }
+        }
+        @if (SelectedVendor != null)
+        {
+             if (ViewBag.error)
+            {
+                <div class="col-md-12">
+                    <div class="col-md-4 alert alert-dismissable alert-danger">
+                        @ViewBag.QuantityError
+                        @ViewBag.TotalPaidError
+                    </div>
+                </div>
+            }
+            <div class="col-md-12">
+                @Html.Action("ProductsToAccountabilityOnVendor", "Vendor", new { VendorId = SelectedVendor.Id })
+            </div>
+        }
+        @if (SelectedVendor != null && Product != null)
+        {
+            <div class="col-md-12">
+                @Html.Action("CountAllocatedProductsPerVendor", "Vendor", new { VendorId = SelectedVendor.Id, Product = Product })
+            </div>
+        }
+    </div>
+</div>

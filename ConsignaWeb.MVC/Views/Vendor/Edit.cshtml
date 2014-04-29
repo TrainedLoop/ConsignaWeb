@@ -1,0 +1,44 @@
+﻿@using ConsignaWeb.MVC.Models.Repository;
+@{
+    List<Users> vendors = ViewBag.Vendors;
+    Users SelectedVendor = ViewBag.SelectedVendor;
+    bool? teste = ViewBag.Error;
+
+
+}
+
+<div class="col-md-12">
+    <div class="col-md-7 well">
+
+        
+        @using (Html.BeginForm("Edit", "Vendor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            Html.RenderPartial("_SelectVendorBox", vendors);
+        }
+        @{
+            if (ViewBag.Error == true)
+            {
+                <p class="text-danger">
+
+                    <label>@ViewBag.PasswordError </label>
+                    <label>@ViewBag.EmailError</label>
+                    <label>@ViewBag.CommissionError</label>
+                    <label>@ViewBag.ProductAlocatedError</label>
+
+                </p>
+            }
+        }
+        @if (SelectedVendor != null)
+        {
+            <div class="col-md-12">
+                @Html.Action("EditVendorBox", "Vendor", new { VendorId = SelectedVendor.Id })
+            </div>
+        }
+    </div>
+    @*<div class="col-md-6">
+
+        @Html.Action("ShowVendors", "Vendor")
+    </div>*@
+</div>
+
+

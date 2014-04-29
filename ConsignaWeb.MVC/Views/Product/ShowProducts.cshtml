@@ -1,0 +1,110 @@
+﻿@using ConsignaWeb.MVC.Models.Repository;
+@{
+    List<Products> products = ViewBag.Products;
+}
+@section scripts
+{
+    @Scripts.Render("~/scripts/tables")
+    @Styles.Render("~/stylesheets/tables")
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function () {
+        $('#tableproduct').dataTable(
+            {
+                "oLanguage": {
+                    "sProcessing": "Aguarde enquanto os dados são carregados ...",
+                    "sLengthMenu": "Mostrar _MENU_ registros por pagina",
+                    "sZeroRecords": "Nenhum registro correspondente ao criterio encontrado",
+                    "sInfoEmtpy": "Exibindo 0 a 0 de 0 registros",
+                    "sInfo": "Exibindo de _START_ a _END_ de _TOTAL_ registros",
+                    "sInfoFiltered": "",
+                    "sSearch": "Procurar",
+                    "oPaginate": {
+                        "sFirst": "Primeiro",
+                        "sPrevious": "Anterior",
+                        "sNext": "Próximo",
+                        "sLast": "Último"
+                    }
+                }
+            });
+    });
+
+    //$(function () {
+    //    // run the currently selected effect
+    //    function runShowProductsEffect() {
+    //        // get effect type from
+    //        var selectedEffect = $("Slide");
+
+    //        // most effect types need no options passed by default
+    //        var options = {};
+    //        // some effects have required parameters
+    //        if (selectedEffect === "scale") {
+    //            options = { percent: 100 };
+    //        } else if (selectedEffect === "size") {
+    //            options = { to: { width: 280, height: 185 } };
+    //        }
+
+    //        // run the effect
+    //        window.location.hash = '#ShowProductsEffect';
+    //        $("#ShowProductsEffect").show(selectedEffect, options, 500);
+    //    };
+
+    //    //callback function to bring a hidden box back
+    //    function callbackShowProductsEffect() {
+    //        setTimeout(function () {
+    //            $("#ShowProductsEffect:visible").removeAttr("style").fadeOut();
+    //        });
+    //    };
+
+    //    // run effect
+    //    $("#openProducts").click(function () {
+    //        var buttonPress = $("#openProducts").val();
+    //        if (buttonPress == "notPress") {
+    //            runShowProductsEffect();
+    //            $("#openProducts").val("press");
+    //            $("#openProducts").attr("src", "/content/Icos/red-x-icon.png");
+    //        }
+    //        else {
+    //            callbackShowProductsEffect();
+    //            $("#openProducts").val("notPress");
+    //            $("#openProducts").attr("src", "/content/Icos/blue-plus-icon.png");
+    //        }
+
+    //        return false;
+    //    });
+
+    //    $("#ShowProductsEffect").hide();
+    //});
+</script>
+    }
+<div class="col-md-12">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Estoque</div>
+            <div class="panel-body" id="ShowProductsEffect">
+                <table class="table table-striped table-bordered table-hover" id="tableproduct">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Preço</th>
+                            <th>Custo</th>
+                            <th>Estoque</th>
+                            <th>Editar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in products)
+                        {
+                            <tr @(item.Amount < 5 ? "class=danger" : (item.Amount < 10 ? "class=warning" : null))>
+                                <td>@item.Name</td>
+                                <td>@item.Price.ToString("C")</td>
+                                <td>@item.Cost.ToString("C")</td>
+                                <td>@item.Amount</td>
+                                <td><input type="button" onclick="location.href='/Product/Edit/@item.Id'" class="btn btn-default btn-sm" value="Editar" /></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

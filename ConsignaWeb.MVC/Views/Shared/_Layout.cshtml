@@ -1,0 +1,24 @@
+﻿<html>
+
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="Aplicativo para gerenciamento de vendas consignadas. Controle estoque, vendedores, comissões, prestações de contas etc. online de qualquer lugar">
+    <meta name="ABSTRACT" content="Gerenciamento de vendas consignadas">
+    <meta name="KEYWORDS" content="consignação,gerenciamento de vendas,vendas,online,controle,estoque,gerenciamento de produtos, gerenciamento de vendedores,consignando,web,gerenciador,cadastro,produtos,gerenciar,cadastrar,vendas">
+
+    <title>@ConsignaWeb.MVC.Models.General.ProjectName</title>
+
+    @Scripts.Render("~/scripts/bootstrap")
+    @Styles.Render("~/stylesheets/bootstrap")
+    @RenderSection("scripts", required: false)
+
+</head>
+<body>
+    @Html.Action("Menu", "Layout")
+    @RenderBody()
+</body>
+
+</html>
+

@@ -1,0 +1,235 @@
+﻿@{
+    ConsignaWeb.MVC.Controllers.HomeController.HomeStatistics statistic = ViewBag.statistic;
+    ConsignaWeb.MVC.Controllers.HomeController.VendorPage vendorPage = ViewBag.vendorPage;
+}
+
+@{
+
+    if (statistic == null && vendorPage == null)
+    {
+        <div class="col-md-12">
+            <div class="col-md-12 well">
+                <h3>
+                    Por que o Consigna web?
+                </h3>
+                <div class="col-md-12">
+                    <p>
+                        O Consigna Web lhe traz total controle e gerenciamento de caixa, clientes e estoque, com uma interface totalmente intuitiva, não a dificuldade de usa-lo.
+                        Tudo isso na nuvem. Pode ser gerenciado até mesmo de um celular.
+                    </p>
+                </div>
+                <div class="col-md-8">
+                    <label>Nossos Módulos:</label>
+
+                    <ul>
+                        <li class="h4">Cadastro e Gerenciamento de clientes/vendedores.</li>
+                        Cadastre e Gerencie todos os seus clientes. seus clientes/vendedores tambem poderão visualizar os produtos que voce alocou a ele.
+                        <li class="h4">Cadastro e gerenciamento de estoque.  </li>
+                        Cadastre e Gerencie todos os seus produtos, preço custo imagens quantidade etc.
+                        <li class="h4">Alocação de produto para vendedor.</li>
+                        Aloque produtos para seus clientes/vendedores definindo preço porcentagem de comissão data para prestação de contas etc.
+                        <li class="h4">Prestação de contas.</li>
+                        Cobre seus cliente/vendedores, seja pela data de prestação de contas ou pelo nome do cliente/vendedor.
+                        <li class="h4">Relatórios Personalizados.</li>
+                        Gere qualquer relatorio que precise com diversos filtros.
+                    </ul>
+                </div>
+                <div class="col-md-4" style="float:right;">
+                    <img class="img-thumbnail" style="float:right" src="~/Content/maos.bmp">
+                </div>
+                <div class="col-md-12">
+                    <br />
+                    <label class="btn btn-success" style="float:right;">Cadastre-se é grátis. </label>
+                </div>
+            </div>
+        </div>
+    }
+
+
+    else if (statistic != null)
+    {
+        <div class="col-md-12">
+            <div class="col-md-12 well">
+                <div class="col-md-12">
+                    <label>Resumo</label>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Caixa
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                <li>
+                                    Total Gasto: @statistic.TotalPayd.ToString("C")
+                                </li>
+                                <li>
+                                    Total Recuperado: @statistic.TotalGain.ToString("C")
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Estoque
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                <li>
+                                    Total de produtos em estoque: @statistic.AllProductsAmount
+                                </li>
+                                <li>
+                                    Valor Total em Estoque: @statistic.AllProductsValue.ToString("C")
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Produtos Alocados:
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                <li>
+                                    Total de produtos alocados: @statistic.AllAllocatedAmount
+                                </li>
+                                <li>
+                                    Custo total de produtos alocados: @statistic.AllAllocatedCost.ToString("C")
+                                </li>
+                                <li>
+                                    Valor Total a receber de produtos alocados: @statistic.AllAllocatedToReceive.ToString("C")
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Vendedores
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                <li>
+                                    Total de vendedores: @statistic.TotalVendors
+                                </li>
+                                <li>
+                                    Total de vendedores com produto alocado: @statistic.VendorsWithAllocatedProducts
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    else if (vendorPage != null)
+    {
+        <div class="col-md-12">
+            <div class="col-md-12 well">
+                <div class="col-md-12">
+
+                </div>
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4><label>Resumo Vendedor: @vendorPage.Name</label></h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <h4>
+                                    Valor total em  produtos: @vendorPage.TotalValueInProducts.ToString("C")
+                                    <br />
+                                    Total de produtos alocados @vendorPage.TotalAmountAllocatedProducts<br />
+                                    Lucro total em comissões a receber @vendorPage.TotalValueToEarnInComission.ToString("C")<br />
+                                </h4>
+                            </div>
+                            <div class="col-md-5 well well-sm">
+                                <center><label> Proximos produtos a prestar contas</label></center>
+                                <br />
+                                <br />
+
+                                @foreach (var item in vendorPage.NextProductToAccontability)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                @item.Product.Name
+                                            </div>
+                                            <div class="panel-body">
+                                                <ul>
+
+                                                    <li>
+                                                        Produto: @item.Product.Name
+                                                    </li>
+                                                    <li>
+                                                        Preço: @item.Price.ToString("C")
+                                                    </li>
+                                                    <li>
+                                                        Comissão: @item.Commision %
+                                                    </li>
+                                                    <li>
+                                                        Quantidade: @item.Amount
+                                                    </li>
+                                                    <li>
+                                                        Date de prestação de contas: @item.DateAccountability.ToShortDateString()
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-5 well well-sm">
+                                <center><label> Produtos com prestação de contas Atrasada</label></center>
+                                <br />
+                                <br />
+
+                                @foreach (var item in vendorPage.AccontabilityDelayed)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                @item.Product.Name
+                                            </div>
+                                            <div class="panel-body">
+                                                <ul>
+
+                                                    <li>
+                                                        Produto: @item.Product.Name
+                                                    </li>
+                                                    <li>
+                                                        Preço: @item.Price.ToString("C")
+                                                    </li>
+                                                    <li>
+                                                        Comissão: @item.Commision %
+                                                    </li>
+                                                    <li>
+                                                        Quantidade: @item.Amount
+                                                    </li>
+                                                    <li>
+                                                        Date de prestação de contas: @item.DateAccountability.ToShortDateString()
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

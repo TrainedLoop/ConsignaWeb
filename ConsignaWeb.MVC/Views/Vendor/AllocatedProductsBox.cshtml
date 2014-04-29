@@ -1,0 +1,110 @@
+﻿@using ConsignaWeb.MVC.Models.Repository;
+@{
+    Layout = null;
+    List<ProductsAllocated> list = ViewBag.ProductsAllocated;
+    int count = 0;
+}
+
+
+
+    <script>
+    @for (var i = 0; i < list.Count(); i++) {
+        <text>
+        $(function () {
+            $("#datepicker@(i)").datepicker(
+                {
+                    dateFormat: 'dd/mm/yy',
+                    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                    dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                    monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                    nextText: 'Próximo',
+                    prevText: 'Anterior'
+                });
+        });
+        </text>
+    }
+
+    $(function () {
+        // run the currently selected effect
+        function runAllocatedProductsOnVendorEffect() {
+            // get effect type from
+            var selectedEffect = $("Slide");
+
+            // most effect types need no options passed by default
+            var options = {};
+            // some effects have required parameters
+            if (selectedEffect === "scale") {
+                options = { percent: 100 };
+            } else if (selectedEffect === "size") {
+                options = { to: { width: 280, height: 185 } };
+            }
+
+            // run the effect
+            window.location.hash = '#AllocatedProductsOnVendorEffect';
+            $("#AllocatedProductsOnVendorEffect").show(selectedEffect, options, 500);
+        };
+
+        //callback function to bring a hidden box back
+        function callbackAccountability() {
+            setTimeout(function () {
+                $("#AllocatedProductsOnVendorEffect:visible").removeAttr("style").fadeOut();
+            }, 1000);
+        };
+
+        // run effect
+        $(document).ready(function () {
+            runAllocatedProductsOnVendorEffect();
+            return false;
+        });
+
+        $("#AllocatedProductsOnVendorEffect").hide();
+    });
+</script>
+@if (list.Count != 0)
+{
+    <div class="panel panel-default" id="AllocatedProductsOnVendorEffect">
+        <div class="panel-heading">Estoque do Vendedor: @(list.Count != 0 ? Html.Raw("<strong>" + list.FirstOrDefault().Vendor.Name + " " + list.FirstOrDefault().Vendor.SurName + "</strong> ") : null) <br /> <label class="text-success">@ViewBag.SaveSuccess</label> </div>
+        <div class="panel-body">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Preço</th>
+                        <th>Custo</th>
+                        <th>Comissão</th>
+                        <th>T.Alocado</th>
+                        <th>Prestação de conta</th>
+                        <th>Salvar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in list)
+                    {
+                        <tr @(item.DateAccountability.Date <= DateTime.Now.Date ? "class=danger" : null)>
+                            <td>@item.Product.Name</td>
+                            <td>@item.Price.ToString("C")</td>
+                            <td>@item.Cost.ToString("C")</td>
+                            <td>@item.Commision.ToString("0.00")%</td>
+                            @using (Html.BeginForm("AllocatedProductsBoxEdit", "Vendor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                <td><input type="number" min="0" name="amount" class="form-control" value="@item.Amount"></td>
+
+                                <td> <input type="text" id="datepicker@(count)" name="DateAccountability" class="form-control" value="@item.DateAccountability.ToShortDateString()"></td>
+                                <td>
+                                    <input type="hidden" name="vendorId" value="@ViewBag.vendorId">
+                                    <input type="hidden" name="productId" value="@item.Id" />
+                                    <input type="submit" class="btn btn-sm btn-primary" value="Salvar">
+                                </td>
+
+                            }
+                        </tr>
+                            count++;
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+}

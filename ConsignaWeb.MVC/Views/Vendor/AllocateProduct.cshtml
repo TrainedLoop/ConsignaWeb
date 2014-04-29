@@ -1,0 +1,248 @@
+﻿@using ConsignaWeb.MVC.Models.Repository;
+@{
+    List<Products> products = ViewBag.Products;
+    List<Users> vendors = ViewBag.Vendors;
+    int ImputsQuantity = 5;
+
+    List<string> productError = ViewBag.productError;
+    string vendorError = ViewBag.vendorError;
+    List<string> AmountError = ViewBag.AmountError;
+    List<string> formError = ViewBag.FormError;
+    List<string> DataError = ViewBag.DataError;
+    List<string> ComissionError = ViewBag.ComissionError;
+    List<AlocatteProductForm> boxWithError = ViewBag.boxWithError == null ? new List<AlocatteProductForm>() : ViewBag.boxWithError;
+}
+
+
+@section scripts
+{
+    <style>
+        #product-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 1em;
+        }
+
+
+
+        #product-icon-option {
+            float: left;
+            height: 50px;
+            width: 50px;
+        }
+    </style>
+    <script>
+
+    @for (var i = 0; i < ImputsQuantity; i++) {
+        <text>
+    $(function () {
+        $("#datepicker@(i)").datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+            dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            nextText: 'Próximo',
+            prevText: 'Anterior',
+            minDate: 1,
+        });
+    });
+    </text>
+
+    }
+
+
+
+    $(function () {
+        var products = [
+            @foreach (var item in products)
+	{
+		 <text>{
+                value: "@item.Id",
+
+                label: "@item.Name",
+                price: "   " + "@item.Price.ToString("0.00")",
+                cost: "@item.Cost.ToString("0.00")",
+                icon: "@item.Image",
+                amount: "@item.Amount"
+            },</text>
+	}
+
+        ];
+
+        @for (var i = 0; i < ImputsQuantity; i++)
+        {
+            <text>
+        $("#product@(i)").autocomplete({
+            minLength: 0,
+            source: products,
+            focus: function (event, ui) {
+                $("#product@(i)").val(ui.item.label);
+                return false;
+            },
+            select: function (event, ui) {
+                $("#product@(i)").val(ui.item.label).attr("style", "border-color: #468847");
+                $("#productid@(i)").val(ui.item.value);
+                $("#product-price@(i)").html("R$" + ui.item.price);
+                $("#product-cost@(i)").html("R$" + ui.item.cost);
+                $("#product-amount@(i)").html(ui.item.amount);
+                $("#product-max@(i)").attr("max", ui.item.amount).attr("style", "border-color: #468847");
+
+                $("#product-icon@(i)").attr("src", ui.item.icon);
+                $("#product-label").attr("style", "Color: green")
+
+                return false;
+            }
+
+        })
+
+            .data("ui-autocomplete")._renderItem = function (ul, item) {
+                return $("<li>")
+                  .append("<img src='" + item.icon + "' id='product-icon-option' />" + "<a><strong>" + item.label + "</strong><br /> R$" + item.price + ", Estoque: " + item.amount + "  </a><br />")
+                  .appendTo(ul);
+            };
+
+        </text>
+            }
+
+    });
+
+    @for (var i = 0; i < ImputsQuantity; i++)
+        {
+            <text>
+    $(document).ready(function () {
+        $('#product@(i)').click(function () {
+            $('#product@(i)').autocomplete("search", "");
+        });
+        return false;
+    });
+    </text>
+        }
+    </script>
+    <script>
+
+    $(function () {
+        var vendors = [
+            @foreach (var item in vendors)
+{
+     <text>{
+                value: "@item.Id",
+                label: "@item.Name " + "@item.SurName",
+                cpf: "@item.CPF",
+            },</text>
+}
+
+        ];
+
+        $("#vendor").autocomplete({
+            minLength: 0,
+            source: vendors,
+            focus: function (event, ui) {
+                $("#vendor").val(ui.item.label);
+                return false;
+            },
+            select: function (event, ui) {
+                $("#vendor").val(ui.item.label).attr("style", "border-color: green;");
+                $("#vendorid").val(ui.item.value);
+                $("#vendor-cpf").val(ui.item.cpf);
+                $("#vendor-commision").val(ui.item.commision);
+                $("#vendor-label").attr("style", "Color: green")
+                return false;
+            }
+        })
+        .data("ui-autocomplete")._renderItem = function (ul, item) {
+            return $("<li>")
+              .append("<a>" + item.label + "</a>")
+              .appendTo(ul)
+
+        };
+    });
+    $(document).ready(function () {
+        $('#vendor').click(function () {
+            $('#vendor').autocomplete("search", "");
+        });
+        return false;
+    });
+    </script>
+
+}
+
+<div class="col-md-12">
+    <div class="col-md-8 well">
+        <div class="col-md-12">
+            <div class="col-md-5">
+                <label id=" vendor-label">
+                    Vendedor
+                </label>
+                <input id="vendor" value="@(ViewBag.vendor==null? "" : ViewBag.vendor.Name+" "+ViewBag.vendor.SurName)" class="form-control"><label class="text-danger"> @ViewBag.vendorError</label>
+                <br />
+            </div>
+
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    @*<div class="panel-heading">Alocar Produtos</div>*@
+                    <div class="panel-body">
+                        @using (Html.BeginForm("AllocateProducts", "Vendor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            <input type="hidden" name="vendorid" value="@(ViewBag.vendor==null? null : ViewBag.vendor.Id)" id="vendorid">
+                            <div class="col-md-4">
+                                <label id="product-label">Produto</label>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Qnt</label>
+                            </div>
+                            <div class="col-md-2">
+                                <label>Comissão</label>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Prestar Conta</label>
+                            </div>
+                            <br />
+                            <div class="col-md-12">
+                                @*<label class="text-danger">@ViewBag.productError @ViewBag.AmountError @ViewBag.FormError</label>*@
+                            </div>
+
+                            for (int i = 0; i < ImputsQuantity; i++)
+                            {
+
+                                <div class="col-md-4">
+                                    <input id="product@(i)" class="form-control" value="@(boxWithError.Where(p => p.BoxNumber == i).Count()==0? "" : boxWithError.Where(p => p.BoxNumber == i).FirstOrDefault().Product.Name)">
+                                    <label class="text-danger">@(productError == null ? "" : productError[i] == null ? "" : productError[i])</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" required min="0" max="@(boxWithError.Where(p => p.BoxNumber == i).Count() == 0 ? 0 : boxWithError.Where(p => p.BoxNumber == i).FirstOrDefault().Product.Amount + 0)" id="product-max@(i)" value="@(boxWithError.Where(p => p.BoxNumber == i).Count() == 0 ? 0 : boxWithError.Where(p => p.BoxNumber == i).FirstOrDefault().Amount + 0)" name="alocateForm[@(i)].Amount" class=" col-md-3 form-control" />
+                                    <label class="text-danger">@(AmountError == null ? "" : AmountError[i] == null ? "" : AmountError[i])</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="number" max="100" min="0" step="0.01" required name="alocateForm[@(i)].Comission" value="@(boxWithError.Where(p => p.BoxNumber == i).Count() == 0 ? "0" : boxWithError.Where(p => p.BoxNumber == i).FirstOrDefault().Comission.ToString())" class="form-control">
+                                    <label class="text-danger">@(ComissionError == null ? "" : ComissionError[i] == null ? "" : ComissionError[i])</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" required id="datepicker@(i)" readonly style="cursor: default; background-color: #FFF;" value="@(boxWithError.Where(p => p.BoxNumber == i).Count() == 0 ? "" : boxWithError.Where(p => p.BoxNumber == i).FirstOrDefault().DateAccountability.ToShortDateString())" name="alocateform[@(i)].dateaccountability" class="form-control">
+                                    <label class="text-danger">@(DataError == null ? "" : DataError[i] == null ? "" : DataError[i])</label>
+                                </div>
+                                <input type="hidden" value="@(boxWithError.Where(p => p.BoxNumber == i).Count()==0? 0 : boxWithError.Where(p => p.BoxNumber == i).FirstOrDefault().Product.Id)" required name="alocateForm[@(i)].ProductId" id="productid@(i)">
+                                <input type="hidden" required name="alocateForm[@(i)].BoxNumber" value="@i">
+                                <div class="col-md-12">
+                                    <br />
+                                </div>
+                            }
+                            <div>
+                                <div class="col-md-12">
+                                    <br />
+                                </div>
+                                <br /><input type="submit" value="Alocar" class="btn btn-primary" style="float:right;" />
+                                <br /><label class="text-success"> @ViewBag.SaveSuccess</label><br />
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
