@@ -213,3 +213,6 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+ConsignaWeb.MVC/Web.Debug.config
+ConsignaWeb.MVC/Web.Release.config
+ConsignaWeb.MVC/Web.config
