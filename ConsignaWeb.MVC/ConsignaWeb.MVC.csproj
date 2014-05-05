@@ -160,7 +160,6 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\LayoutController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
@@ -190,6 +189,7 @@
     <Content Include="Content\sem-imagem.jpg" />
     <Content Include="Css\bootstrap.min%28amelia%29.css" />
     <Content Include="Css\bootstrap.min%28spaceLab%29.css" />
+    <Content Include="Css\bootstrap.min%28dark%29.css" />
     <Content Include="Css\bootstrap.min.css" />
     <Content Include="Css\custom.css" />
     <Content Include="Css\demo_page.css" />
@@ -244,7 +244,7 @@
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Layout\Menu.cshtml" />
+    <Content Include="Views\Layout\_Menu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Client\Register.cshtml" />

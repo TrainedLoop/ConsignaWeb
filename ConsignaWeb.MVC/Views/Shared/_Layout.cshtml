@@ -16,7 +16,8 @@
 
 </head>
 <body>
-    @Html.Action("Menu", "Layout")
+    @Html.Partial("~/Views/Layout/_Menu.cshtml", ConsignaWeb.MVC.Models.Authentication.Login.GetLoggedUser())
+    <div style="margin-top:80px;"></div>
     @RenderBody()
 </body>
 

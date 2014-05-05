@@ -1,0 +1,150 @@
+﻿@using ConsignaWeb.MVC.Models
+@using ConsignaWeb.MVC.Models.Repository;
+@using ConsignaWeb.MVC.Models.Authentication;
+@model Users
+
+
+@{
+    //=======================================================SEM=CADASTRO====================================================================
+    if (Model == null)
+    {
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" style="font-size:25px;">@General.ProjectName</a>
+                </div>
+                <div class="navbar-collapse collapse navbar-responsive-collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>@Html.ActionLink("Cadastre-se", "Register", "Client")</li>
+                    </ul>
+                    @using (Html.BeginForm("UserLogin", "Login", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a>Login</a></li>
+                            <li><a><input type="text" name="email" class="form-control input-sm" style="height:25px; width:120px;"></a></li>
+                            <li><a>Senha</a></li>
+                            <li><a><input type="password" name="password" class="form-control input-sm" style="height:25px; width:80px;"></a></li>
+                            <li><a><input type="submit" value="Entrar" class="btn btn-success btn-xs"></a></li>
+                        </ul>
+                    }
+                </div><!-- /.nav-collapse -->
+            </div>
+        </div>
+
+    }
+
+
+
+
+ //=======================================================VENDEDOR====================================================================
+    else if (Model.Role == ConsignaWeb.MVC.Models.Repository.Roles.Vendedor)
+    {
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" style="font-size:25px;">@General.ProjectName</a>
+                </div>
+                <div class="navbar-collapse collapse navbar-responsive-collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>@Html.ActionLink("Produtos Alocados", "AllocatedProductsOnVendor", "Reports")</li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a>Seja Bem Vindo(a), @Model.Name</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Opções de conta <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Editar senha", "editpassword", "Client")</li>
+                                <li class="divider"></li>
+                                <li>@Html.ActionLink("Sair", "logout", "login")</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div><!-- /.nav-collapse -->
+            </div>
+        </div>
+
+    }
+
+
+
+
+//=======================================================CLIENTE====================================================================
+    else
+    {
+
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" style="font-size:25px;">@General.ProjectName</a>
+                </div>
+                <div class="navbar-collapse collapse navbar-responsive-collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Produtos<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Cadastrar Produtos", "Register", "Product")</li>
+                                @if (Products.Queryable.Where(i => i.User == Model).Count() != 0)
+                                {
+                                    <li>@Html.ActionLink("Editar dados cadastrais do Produto", "Edit", "Product")</li>
+                                    <li>@Html.ActionLink("Estoque", "ShowProducts", "Product")</li>
+                                }
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Vendedores<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Cadastrar vendedor", "Register", "Vendor")</li>
+                                @if (Users.Queryable.Where(i => i.UserBoss == Model).Count() != 0)
+                                {
+                                    <li>@Html.ActionLink("Editar dados cadastrais do vendedor", "Edit", "Vendor")</li>
+                                    <li>@Html.ActionLink("Lista de vendedores", "ShowVendors", "Vendor")</li>
+                                    <li>@Html.ActionLink("Alocar produtos", "AllocateProduct", "Vendor")</li>
+                                    <li>@Html.ActionLink("Editar produtos Alocados", "EditAllocatedProducts", "Vendor")</li>
+                                    <li>@Html.ActionLink("Prestação de contas por data", "AccountabilityPerDate", "Vendor")</li>
+                                    <li>@Html.ActionLink("Prestação de contas por vendedor", "AccountabilityPerVendor", "Vendor")</li>
+                                }
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Relatórios<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Geral", "Chargers", "Reports")</li>
+                                <li>@Html.ActionLink("Produtos alocados por vendedor", "AllocatedProductsOnVendor", "Reports")</li>
+                            </ul>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a>Seja Bem Vindo(a), @Model.Name</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Opções de conta <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Editar senha", "editpassword", "Client")</li>
+                                <li class="divider"></li>
+                                <li>@Html.ActionLink("Sair", "logout", "login")</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div><!-- /.nav-collapse -->
+            </div>
+        </div>
+
+    }
+}
+

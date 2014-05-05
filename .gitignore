@@ -216,3 +216,5 @@ pip-log.txt
 ConsignaWeb.MVC/Web.Debug.config
 ConsignaWeb.MVC/Web.Release.config
 ConsignaWeb.MVC/Web.config
+ConsignaWeb.MVC/Web.Debug.config
+*.config

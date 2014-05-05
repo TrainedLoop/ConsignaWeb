@@ -1,12 +1,11 @@
 ﻿body {
-    background-image: radial-gradient(ellipse farthest-corner at center, #575151 0%, #000000 200%);
+    background-image: radial-gradient(ellipse farthest-corner at center, #e2f8fb 0%, #dcedf2 200%);
 }
 
 .form-control {
     /*background-color: #ACACAC !important;*/
-    border: 1px solid #928A8A;
-    -webkit-box-shadow: inset 1px 1px 10px 1px #525252;
-    box-shadow: inset 1px 1px 10px 1px #525252;
+    -webkit-box-shadow: inset 1px 1px 10px 1px #dcedf2;
+    box-shadow: inset 1px 1px 10px 1px #dcedf2;
 }
 
 select, input {
@@ -30,7 +29,9 @@ table thead tr th, table tbody tr td {
     opacity: 1;
 }
 
-
+.well {
+    background-color: #fBfBfB;
+}
 
 
 
